@@ -9,7 +9,13 @@ on:
       - "packages/core/**"
       # re-run workflow if workflow file changes
       - ".github/workflows/core.tests.yml"
-  pull_request:
+  pull_request_target:
+    branches:
+      - "master"
+    paths:
+      - "packages/core/**"
+      # re-run workflow if workflow file changes
+      - ".github/workflows/core.tests.yml"
     types:
       - "ready_for_review"
       - "opened"
@@ -17,11 +23,21 @@ on:
       - "reopened"
 
 jobs:
-  test:
-    runs-on: ubuntu-22.04
+  authorize:
+    environment: ${{ github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo true
 
+  test:
+    needs: authorize
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
       - name: Setup Node
         uses: ./.github/actions/setup-node-with-cache

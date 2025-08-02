@@ -916,8 +916,21 @@ async function pinQuickNote(launch: boolean) {
  * A function that checks if reminders need to be reconfigured &
  * reschedules them if anything has changed.
  */
+
 async function setupReminders(checkNeedsScheduling = false) {
   const reminders = ((await db.reminders?.all.items()) as Reminder[]) || [];
+  let notificationsCancelled = false;
+  if (Platform.OS === "android") {
+    // If the API level has changed, cancel all notifications.
+    // This is to ensure that the app does not crash on Android 14+.
+    const API_LEVEL = MMKV.getInt("android_apiLevel");
+    if (API_LEVEL !== (Platform.Version as number)) {
+      await notifee.cancelAllNotifications();
+      notificationsCancelled = true;
+      MMKV.setInt("android_apiLevel", Platform.Version as number);
+    }
+  }
+
   const triggers = await notifee.getTriggerNotifications();
   for (const reminder of reminders) {
     if (reminder.mode === "permanent") {
@@ -927,19 +940,21 @@ async function setupReminders(checkNeedsScheduling = false) {
     // Skip reminders that are not repeating and their trigger date is in past.
     if (reminder.mode === "once" && dayjs().isAfter(reminder.date)) continue;
 
-    const pending = triggers.filter((t) =>
-      t.notification.id?.startsWith(reminder.id)
-    );
+    if (!notificationsCancelled) {
+      const pending = triggers.filter((t) =>
+        t.notification.id?.startsWith(reminder.id)
+      );
 
-    let needsReschedule = pending.length === 0 ? true : false;
-    if (!needsReschedule) {
-      needsReschedule = pending[0].notification.data?.dateModified
-        ? parseInt(pending[0].notification.data?.dateModified as string) <
-          reminder.dateModified
-        : true;
+      let needsReschedule = pending.length === 0 ? true : false;
+      if (!needsReschedule) {
+        needsReschedule = pending[0].notification.data?.dateModified
+          ? parseInt(pending[0].notification.data?.dateModified as string) <
+            reminder.dateModified
+          : true;
+      }
+
+      if (!needsReschedule && checkNeedsScheduling) continue;
     }
-
-    if (!needsReschedule && checkNeedsScheduling) continue;
 
     await scheduleNotification(reminder);
   }

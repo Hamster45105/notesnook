@@ -30,6 +30,10 @@ import React, {
   useState
 } from "react";
 import { Dimensions, LayoutChangeEvent, Platform, View } from "react-native";
+import Orientation, {
+  OrientationType,
+  useDeviceOrientationChange
+} from "react-native-orientation-locker";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -67,10 +71,6 @@ import {
 } from "../utils/events";
 import { editorRef, fluidTabsRef } from "../utils/global-refs";
 import { AppNavigationStack } from "./navigation-stack";
-import Orientation, {
-  OrientationType,
-  useDeviceOrientationChange
-} from "react-native-orientation-locker";
 
 const MOBILE_SIDEBAR_SIZE = 0.85;
 
@@ -421,7 +421,6 @@ export const FluidPanelsView = React.memo(
           height: "100%",
           width: "100%",
           backgroundColor: colors.primary.background,
-          paddingBottom: Platform.OS === "android" ? insets?.bottom : 0,
           marginRight:
             orientation === "LANDSCAPE-RIGHT" && Platform.OS === "ios"
               ? insets.right
@@ -535,6 +534,15 @@ const onChangeTab = async (event: { i: number; from: number }) => {
         ?.locked
     ) {
       eSendEvent(eUnlockNote);
+    }
+
+    if (
+      fluidTabsRef.current?.tabChangedFromSwipeAction.value &&
+      !useTabStore.getState().getNoteIdForTab(useTabStore.getState().currentTab)
+    ) {
+      editorController?.current?.commands?.focus(
+        useTabStore.getState().currentTab
+      );
     }
   } else {
     if (event.from === 2) {
