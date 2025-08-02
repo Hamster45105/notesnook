@@ -98,16 +98,25 @@ export function RemoveAttachment(props: ToolProps) {
   );
 }
 
+export function RemoveAudio(props: ToolProps) {
+  const { editor } = props;
+  return (
+    <ToolButton
+      {...props}
+      toggled={false}
+      onClick={() => editor.chain().focus().removeAudio().run()}
+    />
+  );
+}
+
 const previewableFileExtensions = ["pdf"];
 const previewableMimeTypes = ["application/pdf"];
-const audioMimeTypes = ["audio/"];
 
 function canPreviewAttachment(attachment: Attachment) {
   if (!attachment) return false;
   if (
     attachment.mime &&
-    (previewableMimeTypes.some((mime) => attachment.mime.startsWith(mime)) ||
-      audioMimeTypes.some((mime) => attachment.mime.startsWith(mime)))
+    previewableMimeTypes.some((mime) => attachment.mime.startsWith(mime))
   )
     return true;
 

@@ -42,6 +42,7 @@ import {
   AttachmentNode,
   AttachmentType
 } from "./extensions/attachment/index.js";
+import { AudioNode } from "./extensions/audio/index.js";
 import BulletList from "./extensions/bullet-list/index.js";
 import { CodeBlock } from "./extensions/code-block/index.js";
 import { Codemark } from "./extensions/code-mark/index.js";
@@ -306,6 +307,7 @@ const useTiptap = (
         AttachmentNode.configure({
           types: [AttachmentNode.name, ImageNode.name, WebClipNode.name]
         }),
+        AudioNode,
         OutlineListItem,
         OutlineList.configure({ keepAttributes: true, keepMarks: true }),
         ListItem,
@@ -333,7 +335,8 @@ const useTiptap = (
             TaskListNode.name,
             Table.name,
             CheckList.name,
-            AttachmentNode.name
+            AttachmentNode.name,
+            AudioNode.name
           ],
           escapableNodesIfAtDocumentStart: [
             CodeBlock.name,
@@ -420,6 +423,10 @@ export {
   type Attachment,
   type AttachmentType
 } from "./extensions/attachment/index.js";
+export {
+  type AudioAttachment,
+  type AudioAttributes
+} from "./extensions/audio/index.js";
 export { type ImageAttributes } from "./extensions/image/index.js";
 export { type LinkAttributes } from "./extensions/link/index.js";
 export * from "./toolbar/index.js";

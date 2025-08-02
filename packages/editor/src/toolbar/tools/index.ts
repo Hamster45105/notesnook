@@ -73,7 +73,8 @@ import {
   AttachmentSettings,
   DownloadAttachment,
   PreviewAttachment,
-  RemoveAttachment
+  RemoveAttachment,
+  RemoveAudio
 } from "./attachment.js";
 import {
   EmbedAlignCenter,
@@ -151,6 +152,7 @@ const tools = {
   attachmentSettings: AttachmentSettings,
   downloadAttachment: DownloadAttachment,
   removeAttachment: RemoveAttachment,
+  removeAudio: RemoveAudio,
 
   tableSettings: TableSettings,
   columnProperties: ColumnProperties,

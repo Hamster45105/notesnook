@@ -301,6 +301,11 @@ const tools: Record<ToolId, ToolDefinition> = {
     title: strings.delete(),
     conditional: true
   },
+  removeAudio: {
+    icon: "delete",
+    title: strings.delete(),
+    conditional: true
+  },
   embedSettings: {
     icon: "embedSettings",
     title: strings.embedSettings(),

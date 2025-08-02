@@ -17,40 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export type BaseAttachment = {
-  hash: string;
-  filename: string;
-  mime: string;
-  size: number;
-  progress?: number;
-};
-
-export type FileAttachment = BaseAttachment & {
-  type: "file";
-};
-
-export type WebClipAttachment = BaseAttachment & {
-  type: "web-clip";
-  src: string;
-  title: string;
-  width?: string;
-  height?: string;
-};
-
-export type ImageAttachment = BaseAttachment & {
-  type: "image";
-  width?: number;
-  height?: number;
-  src?: string;
-  aspectRatio?: number;
-} & ImageAlignmentOptions;
-
-export type ImageAlignmentOptions = {
-  float?: boolean;
-  align?: "center" | "left" | "right";
-};
-
-export type Attachment =
-  | FileAttachment
-  | WebClipAttachment
-  | ImageAttachment;
+export { AudioNode } from "./audio.js";
+export type { AudioOptions, AudioAttributes, AudioAttachment } from "./audio.js";
+export { AudioComponent } from "./component.js";
