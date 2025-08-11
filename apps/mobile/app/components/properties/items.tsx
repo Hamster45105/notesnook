@@ -242,7 +242,9 @@ export const Items = ({
           key={item.id}
           testID={"icon-" + item.id}
           style={{
-            width: columnItemWidth - 8
+            width: columnItemWidth - 8,
+            minHeight: columnItemWidth / 2 + 35,
+            justifyContent: "space-between"
           }}
         >
           <View
@@ -267,13 +269,21 @@ export const Items = ({
             />
           </View>
 
-          <Paragraph
-            textBreakStrategy="simple"
-            size={AppFontSize.xxs}
-            style={{ textAlign: "center" }}
+          <View
+            style={{
+              minHeight: 30,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
           >
-            {item.title}
-          </Paragraph>
+            <Paragraph
+              textBreakStrategy="simple"
+              size={AppFontSize.xxs}
+              style={{ textAlign: "center" }}
+            >
+              {item.title}
+            </Paragraph>
+          </View>
         </Pressable>
       );
     },
@@ -325,12 +335,12 @@ export const Items = ({
                 marginBottom: 0,
                 marginTop: DefaultAppStyles.GAP
               }}
-              renderItem={({ item, index }) => (
+              renderItem={({ item }) => (
                 <View
                   style={{
                     flexDirection: "row",
                     paddingHorizontal: DefaultAppStyles.GAP,
-                    gap: 5,
+                    gap: DefaultAppStyles.GAP_SMALL,
                     width: width
                   }}
                 >
